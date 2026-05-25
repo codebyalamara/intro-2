@@ -4,92 +4,114 @@ const blogForm = document.getElementById('blogForm')
 const titleControl = document.getElementById('title')
 const contentControl = document.getElementById('content')
 
-const blogsArr = [
-    {
-        title: 'ES6',
-        content:
-        'ES6 Senior Angular developers traditionally pushed all state into services.'
-    },
-    {
-        title: 'Promises and Async-Await',
-        content:
-        'Promises and Async-Await Senior Angular developers traditionally pushed all state into services.'
-    }
-]
+blogForm.addEventListener('submit', onBlogAdd)
 
-function onBlogSubmit (eve) {
+function onBlogAdd(eve){
     eve.preventDefault()
 
-    let NEW_BLOG = {
-        title: titleControl.value,
-        content: contentControl.value
-    }
+    let promise = new Promise((resolve, reject) => {
 
-    cl(NEW_BLOG)
-    addBlog(NEW_BLOG)
-}
+        setTimeout(() => {
 
-function addBlog (newBlog) {
+            let success = Math.random() > .5 ? true : false
 
-    // API call >> Async JS (Non-Blocking)
+            if(success){
+                resolve('Blog Added Successfully !!!')
+            }else{
+                reject('Something went wrong !!!')
+            }
 
-    setTimeout(() => {
+        }, 1000)
+    })
 
-        let success = Math.random() > 0.5 ? true : false
-
-        if (success) {
-
-            blogsArr.push(newBlog)
-
-            fetchBlogs()
-
-            cl('New Blog created successfully !!!')
-
+    promise
+        .then((res) => {
             Swal.fire({
-                title: 'New Blog created successfully !!!',
-                icon: 'success',
-                timer: 3000
+                icon : 'success',
+                title : res
             })
 
             blogForm.reset()
-
-        } else {
-
-            cl('Something went wrong while creating new Blog !!!')
-
+        })
+        .catch((err) => {
             Swal.fire({
-                title: 'Something went wrong while creating new Blog !!!',
-                icon: 'error',
-                timer: 3000
+                icon : 'error',
+                title : err
             })
-
-        }
-
-    }, 700)
+        })
 }
 
 
-function fetchBlogs () {
 
-    // API call >> Async JS (Non-Blocking)
+
+
+
+
+/*
+const cl = console.log;
+
+// promise is a JS Object which gives some value in futre 
+// It is used to handle Async Operations in JS
+
+
+// promies has 3 States 
+
+// pading == waiting for result 
+//  Fullfill/resolve == Action related to promies is success
+// Reject == Action related  to promies is fail
+
+// Promise over Callback functions
+// 1 it improves readability of the code
+// 2 Better Error Handling
+// 3 It handles Async operations in better way
+// 4 Better flow of control definition
+
+let promise = new Promise((resolve, reject) => {
 
     setTimeout(() => {
 
-        let success = Math.random() > 0.5 ? true : false
+        // API > Async JS (Non-Blocking)
+        let success = Math.random() > .5 ? true : false
 
         if (success) {
-
-            let data = blogsArr
-
-            cl('Blogs fetched successfully !!!') // templating
+            let data = `Fetched data successfully !!!`
+            resolve(data)
 
         } else {
-
-            cl('Something went wrong while fetching Blogs data !!!')
-
+            let err = `Something went wrong !!!`
+            reject(err)
         }
 
-    }, 400)
+    }, 500);
+
+})
+
+promise
+    .then((res) => {
+        cl(res)
+    })
+    .catch((err) => {
+        cl(err)
+    })
+
+*/
+
+
+
+
+
+/*
+function CreateStudent(fn, lname, email, contact) {
+    // var this = {}
+    this.fname = fn
+    this.lname = lname
+    this.contact = contact
+    this.email = email
+    // return this
 }
 
-blogForm.addEventListener('submit', onBlogSubmit)
+let std = new CreateStudent("Jhon", "Doe", "jd@gmail.com", 1234567890)
+
+cl(std)
+*/
+
