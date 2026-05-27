@@ -1,117 +1,133 @@
 const cl = console.log
 
-const blogForm = document.getElementById('blogForm')
-const titleControl = document.getElementById('title')
-const contentControl = document.getElementById('content')
+const spinner = document.getElementById('spinner')
+const info = document.getElementById('info')
+const fetchBtn = document.getElementById('fetchBtn')
 
-blogForm.addEventListener('submit', onBlogAdd)
-
-function onBlogAdd(eve){
-    eve.preventDefault()
-
-    let promise = new Promise((resolve, reject) => {
+function fetchProdId(){
+    return new Promise((resolve, reject) => {
 
         setTimeout(() => {
 
-            let success = Math.random() > .5 ? true : false
+            let success = Math.random() > .5
 
             if(success){
-                resolve('Blog Added Successfully !!!')
+                let res = {
+                    prodId : 'P101'
+                }
+                resolve(res)
             }else{
-                reject('Something went wrong !!!')
+                let err = `Something went wrong while fetching Product ID`
+                reject(err)
             }
 
-        }, 1000)
+        }, 900)
     })
-
-    promise
-        .then((res) => {
-            Swal.fire({
-                icon : 'success',
-                title : res
-            })
-
-            blogForm.reset()
-        })
-        .catch((err) => {
-            Swal.fire({
-                icon : 'error',
-                title : err
-            })
-        })
 }
 
+function fetchProdDetails(){
+    return new Promise((resolve, reject) => {
 
+        setTimeout(() => {
 
+            let success = Math.random() > .5
 
+            if(success){
+                let res = {
+                    prodName : 'Samsung S25',
+                    price : 85000,
+                    category : 'Mobile'
+                }
+                resolve(res)
+            }else{
+                let err = `Something went wrong while fetching Product Details`
+                reject(err)
+            }
 
+        }, 700)
+    })
+}
 
+function fetchProdReviews(){
+    return new Promise((resolve, reject) => {
 
-/*
-const cl = console.log;
+        setTimeout(() => {
 
-// promise is a JS Object which gives some value in futre 
-// It is used to handle Async Operations in JS
+            let success = Math.random() > .5
 
+            if(success){
+                let res = [
+                    {
+                        user : 'Aman',
+                        rating : 4,
+                        review : 'Good product'
+                    },
+                    {
+                        user : 'Neha',
+                        rating : 5,
+                        review : 'Excellent phone'
+                    }
+                ]
+                resolve(res)
+            }else{
+                let err = `Something went wrong while fetching Product Reviews`
+                reject(err)
+            }
 
-// promies has 3 States 
+        }, 500)
+    })
+}
 
-// pading == waiting for result 
-//  Fullfill/resolve == Action related to promies is success
-// Reject == Action related  to promies is fail
+fetchBtn.addEventListener('click', () => {
 
-// Promise over Callback functions
-// 1 it improves readability of the code
-// 2 Better Error Handling
-// 3 It handles Async operations in better way
-// 4 Better flow of control definition
+    info.innerHTML = ''
+    spinner.classList.remove('d-none')
 
-let promise = new Promise((resolve, reject) => {
+    fetchProdId()
+        .then(res => {
+            cl(res)
 
-    setTimeout(() => {
+            info.innerHTML = `
+                <div class="alert alert-info">
+                    Product ID : ${res.prodId}
+                </div>
+            `
 
-        // API > Async JS (Non-Blocking)
-        let success = Math.random() > .5 ? true : false
+            return fetchProdDetails()
+        })
+        
+        .then(res => {
+    cl(res)
 
-        if (success) {
-            let data = `Fetched data successfully !!!`
-            resolve(data)
+    let result = `<h5>Product Reviews</h5>`
 
-        } else {
-            let err = `Something went wrong !!!`
-            reject(err)
-        }
+    res.forEach(review => {
+        result += `
+            <p>
+                ${review.user} - ${review.rating}⭐ - ${review.review}
+            </p>
+        `
+    })
 
-    }, 500);
+    info.innerHTML += result
 
+    Swal.fire({
+        title : 'Product Data Loaded Successfully !!!',
+        icon : 'success',
+        timer : 3000
+    })
 })
 
-promise
-    .then((res) => {
-        cl(res)
-    })
-    .catch((err) => {
-        cl(err)
-    })
+        .catch(err => {
+            cl(err)
 
-*/
-
-
-
-
-
-/*
-function CreateStudent(fn, lname, email, contact) {
-    // var this = {}
-    this.fname = fn
-    this.lname = lname
-    this.contact = contact
-    this.email = email
-    // return this
-}
-
-let std = new CreateStudent("Jhon", "Doe", "jd@gmail.com", 1234567890)
-
-cl(std)
-*/
-
+            Swal.fire({
+                title: err,
+                icon: 'error',
+                timer: 3000
+            })
+        })
+        .finally(() => {
+            spinner.classList.add('d-none')
+        })
+})
